@@ -18,7 +18,6 @@ function Ludo_BlackListIP_Root ( $args ) {
 
     global $yourls_blacklist_ip;
 
-
     $BlackListIP = $args[0];
 
     if (in_array($BlackListIP, $yourls_blacklist_ip)) {
