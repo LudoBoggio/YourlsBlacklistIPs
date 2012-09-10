@@ -84,8 +84,13 @@ function ludo_blacklist_ip_process () {
 	}
 
 	// Update list
+<<<<<<< HEAD
 	$sent_list = serialize ( explode ( '\n' , $IP_Array ) );
 	yourls_update_option ( $sent_list , 'ludo_blacklist_ip_liste' );
+=======
+	$sent_list = serialize ( explode ( '\n' , $_POST['blacklist_form'] ) );
+	yourls_update_option ( 'ludo_blacklist_ip_liste' , $sent_list );
+>>>>>>> f4904534db2c4b699379a0e01761b6ccfd514909
 	echo "Black list updated" ;
 }
 
