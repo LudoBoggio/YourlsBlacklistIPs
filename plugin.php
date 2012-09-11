@@ -74,29 +74,27 @@ function ludo_blacklist_ip_process () {
     yourls_verify_nonce( 'blacklist_ip' ) ;
 	
 	// Check if the answer is correct.
-	$IP_Form = $_POST['blacklist_form'] ;
+	$IP_Form = explode ( "\r\n" , $_POST['blacklist_form'] ) ;
 	
 	if (! is_array ($IP_Form) ) {
 		echo "Bad answer, Blacklist not updated";
 		die ();
 	}
-foreach ($IP_Form as $key => $value) {
-	if ( !Check_IP ( $value) ) {
-		unset ($IP_Form [$key]) ;
-	}
-	
-	foreach ($IP_Form as $key ==> $value)
-		if ( !Check_IP ( $value) ) unset ($IP_Form [$key]) ;
-	
 
-    // Update list
-    $sent_list = serialize ( explode ( "\r\n" , $_POST['blacklist_form'] ) );
-    yourls_update_option ( 'ludo_blacklist_ip_liste', $sent_list );
-    echo "Black list updated" ;
+	foreach ($IP_Form as $key => $value)
+		if ( !Check_IP ( $value) ) unset ($IP_Form [$key]) ;
+		
+
+	// Update list
+	$sent_list = serialize ( $IP_Form );
+	yourls_update_option ( 'ludo_blacklist_ip_liste', $sent_list );
+	echo "Black list updated. New blacklist is :<BR />" ;
+	foreach ($IP_Form as $value) echo $value."<BR />";
+}
 	
 function Check_IP ($IP) {
 	$IPs = explode ( "." , $IP );
-echo "Testing ".$IP."<BR />";
+//echo "Testing ".$IP."<BR />";
 	if (count ($IPs) != 4 ) return false ;
 	foreach ( $IPs as $value ) 
 		if (! ctype_digit($value) || $value < 0 || $value > 255 )
@@ -104,5 +102,5 @@ echo "Testing ".$IP."<BR />";
 	return true;
 }
 
-}
+
 
