@@ -3,7 +3,7 @@
 Plugin Name: BlackListIP
 Plugin URI: https://github.com/LudoBoggio/YourlsBlackListIPs
 Description: Plugin which block blacklisted IPs
-Version: 1.1
+Version: 1.2
 Author: Ludo
 Author URI: http://ludo.boggio.fr
 */
@@ -63,7 +63,7 @@ function ludo_blacklist_ip_form () {
         <p><textarea cols="50" rows="10" name="blacklist_form">$liste_ip_display</textarea></p>
         
         <p><input type="submit" value="Save" /></p>
-		<p>I suggest to add here IPs that you saw adding bulk URL. It is your own responsibility to check the use of the IPs you block.</p>
+		<p>I suggest to add here IPs that you saw adding bulk URL. It is your own responsibility to check the use of the IPs you block. WARNING : erroneous entries may create unexpected behaviours, please double-check before validation.</p>
         </form>
 HTML;
 }
@@ -72,10 +72,37 @@ HTML;
 function ludo_blacklist_ip_process () {
     // Check nonce
     yourls_verify_nonce( 'blacklist_ip' ) ;
+	
+	// Check if the answer is correct.
+	$IP_Form = $_POST['blacklist_form'] ;
+	
+	if (! is_array ($IP_Form) ) {
+		echo "Bad answer, Blacklist not updated";
+		die ();
+	}
+foreach ($IP_Form as $key => $value) {
+	if ( !Check_IP ( $value) ) {
+		unset ($IP_Form [$key]) ;
+	}
+	
+	foreach ($IP_Form as $key ==> $value)
+		if ( !Check_IP ( $value) ) unset ($IP_Form [$key]) ;
+	
 
     // Update list
     $sent_list = serialize ( explode ( "\r\n" , $_POST['blacklist_form'] ) );
     yourls_update_option ( 'ludo_blacklist_ip_liste', $sent_list );
     echo "Black list updated" ;
+	
+function Check_IP ($IP) {
+	$IPs = explode ( "." , $IP );
+echo "Testing ".$IP."<BR />";
+	if (count ($IPs) != 4 ) return false ;
+	foreach ( $IPs as $value ) 
+		if (! ctype_digit($value) || $value < 0 || $value > 255 )
+			return false ;
+	return true;
+}
+
 }
 
