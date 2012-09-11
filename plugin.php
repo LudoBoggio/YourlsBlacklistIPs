@@ -82,7 +82,7 @@ function ludo_blacklist_ip_process () {
 	}
 
 	foreach ($IP_Form as $key => $value)
-		if ( !Check_IP ( $value) ) unset ($IP_Form [$key]) ;
+		if ( !ludo_blacklist_check_IP ( $value) ) unset ($IP_Form [$key]) ;
 		
 
 	// Update list
@@ -92,7 +92,7 @@ function ludo_blacklist_ip_process () {
 	foreach ($IP_Form as $value) echo $value."<BR />";
 }
 	
-function Check_IP ($IP) {
+function ludo_blacklist_check_IP ($IP) {
 	$IPs = explode ( "." , $IP );
 //echo "Testing ".$IP."<BR />";
 	if (count ($IPs) != 4 ) return false ;
