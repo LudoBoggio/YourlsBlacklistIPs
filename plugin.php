@@ -3,9 +3,9 @@
 Plugin Name: BlackListIP
 Plugin URI: https://github.com/LudoBoggio/YourlsBlackListIPs
 Description: Plugin which block blacklisted IPs
-Version: 1.2
+Version: 1.3
 Author: Ludo
-Author URI: http://ludo.boggio.fr
+Author URI: http://ludovic.boggio.fr
 */
 
 // No direct call
@@ -22,7 +22,8 @@ yourls_add_action( 'plugins_loaded', 'ludo_blacklist_ip_add_page' );
 // Get blacklisted IPs from YOURLS options feature and compare with current IP address
 function ludo_blacklist_ip_root ( $args ) {
 	$IP = $args[0];
-	$Intervalle_IP = unserialize ( yourls_get_option ('ludo_blacklist_ip_liste') );
+	$Intervalle_IP = yourls_get_option ('ludo_blacklist_ip_liste');
+	$Intervalle_IP = ( $Intervalle_IP ) ? ( unserialize ( $Intervalle_IP ) ):((array)NULL); 
 
 	foreach ( $Intervalle_IP as $value ) {
 		$IPs = explode ( "-" , $value );
@@ -63,17 +64,18 @@ function ludo_blacklist_ip_form () {
         <input type="hidden" name="action" value="blacklist_ip" />
         <input type="hidden" name="nonce" value="$nonce" />
         
-        <p>Blacklist following IPs, one IP per line, no wildcards allowed, only raw IPs :</p>
+        <p>Blacklist following IPs (one range or IP per line, no wildcards allowed) :</p>
         <p><textarea cols="50" rows="10" name="blacklist_form">$liste_ip_display</textarea></p>
         
         <p><input type="submit" value="Save" /></p>
 		<p>I suggest to add here IPs that you saw adding bulk URL. It is your own responsibility to check the use of the IPs you block. WARNING : erroneous entries may create unexpected behaviours, please double-check before validation.</p>
-		<p>Follwing formats are accepted : 
+		<p>Examples : 
 			<ul>
-				<li>A.B.C.D/X : A.B.C.D is an IP address, X is the bit number for the mask (CIDR notation).</li>
-				<li>A.B.C.D/X.Y.Z.T : A.B.C.D is an IP address, X.Y.Z.T is the subnet mask.</li>
-				<li>A.B.C.D-X.Y.Z.T : range from IP address A.B.C.D to IP address X.Y.Z.T (included)</li>
-				<li>A.B.C.D : if D, C.D, B.C.D are only 0 : cover all the subnet included in that range. if there are no 0 at the end, specify only this IP address</li>
+				<li>10.0.0.1/24 : blacklist from 10.0.0.0 to 10.0.0.255 (CIDR notation).</li>
+				<li>192.168.1.2/255.255.255.128 : blacklist from 192.168.1.0 to 192.168.0.128.</li>
+				<li>192.168.1.12-192.168.1.59 : blacklist from 192.168.1.12 to 192.168.1.59.</li>
+				<li>192.168.0.0 : blacklist from 192.168.0.0 to 192.168.255.255</li>
+				<li>10.0.0.58 : blacklist only 10.0.0.58 IP address.</li>
 			</ul>
 		</p>
         </form>
