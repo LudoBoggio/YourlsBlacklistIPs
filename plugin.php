@@ -52,7 +52,7 @@ function ludo_blacklist_ip_do_page () {
 // Display form to administrate blacklisted IPs list
 function ludo_blacklist_ip_form () {
     $nonce = yourls_create_nonce( 'blacklist_ip' ) ;
-    $liste_ip = yourls_get_option ('ludo_blacklist_ip_liste','Enter IP addresses here, one per line');
+    $liste_ip = yourls_get_option ('ludo_blacklist_ip_liste','Enter IP addresses here, one entry per line');
     if ($liste_ip != 'Enter IP addresses here, one entry per line' )
         $liste_ip_display = implode ( "\r\n" , unserialize ( $liste_ip ) );
 	else
