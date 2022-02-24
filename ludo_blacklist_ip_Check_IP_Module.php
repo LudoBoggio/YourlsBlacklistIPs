@@ -58,14 +58,14 @@ function ludo_blacklist_ip_Check_IP ( &$IP ) {
 			return false ;
 		}
 	}
-	$IP = implode ( $IPs , "." );
+	$IP = implode ( ".", $IPs );
 	return true;
 }
 
 function ludo_blacklist_ip_IP_Trim ( $IP ) {
 	// Input : array of IP address with strings 
 	// Output : array of the IP address with integer
-	return 0+ltrim ( trim ( $IP ) , "0" ) ;
+	return (int) ltrim ( trim ( $IP ) , "0" ) ;
 }
 
 function ludo_blacklist_ip_Check_Mask ( $Mask ) {
